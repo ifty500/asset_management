@@ -1,0 +1,162 @@
+ {% load static %} {% load crispy_forms_tags %} {% load widget_tweaks%}
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Jekyll v3.8.5">
+    <title>{{title}}</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/navbar-fixed/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/main.css' %}" rel="stylesheet">
+    <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
+
+
+    <!-- Link all the css files in both jQuery and jQuery-ui to the templates  -->
+    <link href="{% static 'js/jquery-ui-1.12.1/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui-1.12.1/jquery-ui.structure.min.css' %}" rel="stylesheet">
+    <link href="{% static 'js/jquery-ui-1.12.1/jquery-ui.theme.min.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <main role="main" class="container">
+        <div class="jumbotron">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <h1 class="title">{{title}}</h1>
+            {% block content %}
+            <form class="form-horizontal" method="POST" id="itemForm" data-departments-url="{% url 'ajax_load_departments'%}" data-employees-url="{% url 'ajax_load_employees'%}" action="">
+                {% csrf_token %}
+                <div class="row">
+                    {% for field in form %}
+                    <div class="form-group col-sm-4 col-md-3">
+                        {{ field.label_tag }} {% render_field field class="form-control" %}
+
+                    </div>
+                    {% endfor %}
+
+
+                </div>
+                <input class="btn btn-primary" type="submit" value="Search">
+
+            </form>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Item Name</th>
+                        <th>Description</th>
+                        <th>Item Type</th>
+                        <th>Code</th>
+                        <th>Unit</th>
+                        <th>Purchase Date</th>
+                        <th>Company</th>
+                        <th>Department</th>
+                        <th>allocate_person</th>
+                        <th>timestamp</th>
+
+                        <th>DELETE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instance in queryset %}
+                    <tr>
+                        <td>{{forloop.counter}}</td>
+                        <td><a href="{% url 'item_edit' pk=instance.pk %}"> {{instance.item_name}}</a></td>
+
+
+                        <td>{{instance.description}}</td>
+                        <td>{{instance.item_type}}</td>
+                        <td>{{instance.code}}</td>
+                        <td>{{instance.unit}}</td>
+
+
+                        <td>{{instance.purchase_date}}</td>
+                        <td>{{instance.company}}</td>
+                        <td> {{instance.department}}</td>
+                        <td>{{instance.employee}}</td>
+                        <td>{{instance.timestamp}}</td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'item_delete' pk=instance.pk %}"> Delete </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+            {% endblock %}
+
+
+        </div>
+    </main>
+    <!--   Link all the js files in both jQuery and jQuery-ui to the templates  -->
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script> 
+
+    <script>
+        $("#id_company").change(function() {
+            var url = $("#itemForm").attr("data-departments-url");
+            var companyId = $(this).val();
+            $.ajax({
+                url: url,
+                data: {
+                    'company': companyId
+                },
+                success: function(data) {
+                    $("#id_department").html(data);
+                }
+            });
+
+        });
+
+        $("#id_company").change(function() {
+            var url = $("#itemForm").attr("data-employees-url");
+            var companyId = $(this).val();
+            $.ajax({
+                url: url,
+                data: {
+                    'company': companyId
+                },
+                success: function(data) {
+                    $("#id_employee").html(data);
+                }
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

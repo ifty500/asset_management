@@ -1,0 +1,19 @@
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}}" role="alert">
+    <p{% if message.tags %} class=""{% endif%}>{{message</p>
+
+</div>
+{% endfor %}
+
+{% endif %}
+
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile" id="">
+    <button type="submit">upload</button>
+    <h2>
+        Please Upload Excel file
+    </h2>
+
+</form>
