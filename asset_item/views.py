@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 import csv, io
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .resources import EmployeeResource
 from django.contrib import messages
 from tablib import Dataset
@@ -196,11 +197,23 @@ def item_list(request):
     title = 'List of all item'
     queryset = Item.objects.all()
     form = ItemSearchForm(request.POST or None)
+    paginator = Paginator(queryset, 5)
+    page = request.GET.get('page', 1)
+
+    try:
+        items = paginator.page(page)
+    except PageNotAnInteger:
+        items = paginator.page(1)
+
+    except EmptyPage:
+        items = paginator.page(paginator.num_pages)
+
      #department = Department.objects.all()
     context = {
         "title": title,
         "queryset": queryset,
         "form": form,
+        "items":items,
         #'department':department
     }
 
@@ -211,6 +224,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
 
         elif form['company'].value() and form['department'].value() and form['employee'].value() and form['item_type'].value():
@@ -219,6 +233,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
         elif form['company'].value() and form['department'].value()  and form['employee'].value():
             queryset = Item.objects.all().filter(company_id=form['company'].value(),department_id=form['department'].value(),employee_id=form['employee'].value())
@@ -226,13 +241,14 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
         elif form['company'].value() and form['department'].value():
             queryset = Item.objects.all().filter(company_id=form['company'].value(),department_id=form['department'].value())
             context = {
             "title": title,
             "queryset": queryset,
-            "form": form,
+                "form": form, "items": items,
             }
 
         elif form['company'].value() and form['employee'].value():
@@ -241,6 +257,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
 
         elif form['company'].value():
@@ -249,6 +266,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
 
         elif  form['department'].value():
@@ -257,6 +275,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
         
         elif  form['employee'].value():
@@ -265,6 +284,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
         elif form['item_type'].value():
             queryset = Item.objects.all().filter(item_type__icontains=form['item_type'].value())
@@ -272,6 +292,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+                "items": items,
             }
         else:
             queryset = Item.objects.all().filter(item_name__icontains=form['item_name'].value())
@@ -279,6 +300,7 @@ def item_list(request):
             "title": title,
             "queryset": queryset,
             "form": form,
+            "items": items,
             }
 
             # if form['export_to_CSV'].value() == True:
@@ -389,6 +411,7 @@ def employee_edit(request, pk):
 def employee_list(request):
     title = 'List of all employee'
     queryset = Employee.objects.all()
+    
     form = EmployeeSearchForm(request.POST or None)
     context = {
         "title": title,

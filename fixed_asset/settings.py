@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_filters',
     'widget_tweaks',
-    'import_export'
+    'import_export',
+    'bootstrap_modal_forms',
     ]
 
 MIDDLEWARE = [

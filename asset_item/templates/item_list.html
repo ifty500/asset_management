@@ -12,6 +12,7 @@
     <title>{{title}}</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/navbar-fixed/">
+    
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -47,7 +48,7 @@
 <body>
     {% include 'navbar.html' %}
 
-    <main role="main" class="container">
+    <main role="main" class="container-fluid">
         <div class="jumbotron">
             {% if messages %}
             <ul class="messages">
@@ -72,6 +73,7 @@
 
                 </div>
                 <input class="btn btn-primary" type="submit" value="Search">
+               
 
             </form>
             <table class="table table-bordered">
@@ -115,15 +117,39 @@
                 {% endfor %}
             </tbody>
             </table>
-            {% endblock %}
+    <!-- {% if items.has_other_pages %}
+        <ul class="pagination">
+            {% if items.has_previous %}
+            <li><a href="?page={{ items.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+            {% endif %}
+            {% for i in items.paginator.page_range %}
+            {% if items.number == i %}
+                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+                <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if items.has_next %}
+            <li><a href="?page={{ items.next_page_number }}">&raquo;</a></li>
+            {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %} -->
+{% endblock %}
 
+  
+    </div>
+        
 
-        </div>
     </main>
     <!--   Link all the js files in both jQuery and jQuery-ui to the templates  -->
     <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
     <script src="{% static 'js/jquery-ui-1.12.1/jquery-ui.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script> 
+    <script src=" https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.4.0/umd/popper.min.js"></script>
 
     <script>
         $("#id_company").change(function() {
@@ -141,13 +167,13 @@
 
         });
 
-        $("#id_company").change(function() {
+        $("#id_department").change(function() {
             var url = $("#itemForm").attr("data-employees-url");
-            var companyId = $(this).val();
+            var departmentId = $(this).val();
             $.ajax({
                 url: url,
                 data: {
-                    'company': companyId
+                    'department': departmentId
                 },
                 success: function(data) {
                     $("#id_employee").html(data);

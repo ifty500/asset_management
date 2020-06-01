@@ -78,6 +78,7 @@
         $("#id_company").change(function() {
             var url = $("#itemForm").attr("data-departments-url");
             var companyId = $(this).val();
+            console.log(companyId)
             $.ajax({
                 url: url,
                 data: {
@@ -93,6 +94,7 @@
         $("#id_department").change(function() {
             var url = $("#itemForm").attr("data-employees-url");
             var departmentId = $(this).val();
+             console.log(departmentId)
             $.ajax({
                 url: url,
                 data: {
