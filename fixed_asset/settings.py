@@ -85,8 +85,8 @@ DATABASES = {
         #'NAME': 'postest',
         #'ENGINE': 'mysql.connector.django',
         'NAME': 'fixed_asset',
-        'USER': 'naim500',
-        'PASSWORD': 'naim500',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
