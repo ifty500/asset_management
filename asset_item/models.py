@@ -3,6 +3,7 @@ from datetime import datetime, date
 
 from django.urls import reverse 
 from django.contrib.auth.models import User
+from django.db.models import Max
 
 # Create your models here.
 
@@ -104,6 +105,22 @@ class Item(models.Model):
     company = models.ForeignKey(Company, on_delete = models.SET_NULL, null =True,blank=True)
     department = models.ForeignKey(Department, on_delete = models.SET_NULL,null= True, blank=True)
     employee = models.ForeignKey(Employee, on_delete = models.CASCADE, blank=True,  null=True)
+    
+    
+    
+    
+    
+    def save(self, flag=True, *args, **kwargs):
+        # Save your object. After this line, value of custom_id will be 0 which is default value
+        super(Item, self).save( *args, **kwargs)
+        # Here value of custom_id will be updated according to your id value
+        if flag:        
+            self.code = str(self.company.short_name)+"-"+str(self.department.short_name) + \
+                "-"+str(self.item_type[:3])+"-"+str(self.code)
+            self.save(flag=False, *args, **kwargs)
+            
+        
+
 
     def __str__(self):
         return self.name
