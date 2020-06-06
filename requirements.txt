@@ -2,7 +2,7 @@ asgiref==3.2.7
 autopep8==1.5.2
 defusedxml==0.6.0
 diff-match-patch==20181111
-Django==3.0.6
+Django==3.0.7
 django-crispy-forms==1.9.1
 django-excel==0.0.10
 django-filter==2.2.0
